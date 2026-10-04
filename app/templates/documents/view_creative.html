@@ -1,0 +1,54 @@
+<div class="creative-doc">
+    <div class="creative-header">
+        <div>
+            {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Logo" style="max-height:70px;display:block;">
+            {% else %}<h2 class="accent-text">{{ document.vendor.name }}</h2>{% endif %}
+        </div>
+        <div style="text-align:right;">
+            <h1>{{ document.doc_type }}</h1>
+            <p class="muted">#{{ document.document_number }}</p>
+        </div>
+    </div>
+
+    <div class="creative-parties">
+        <div>
+            <h4>Prepared For</h4>
+            <p><strong>{{ document.client.name }}</strong><br>{% if document.client.contact_person %}{{ document.client.contact_person }}<br>{% endif %}{{ document.client.address }}<br>{{ document.client.email }}</p>
+        </div>
+        <div>
+            <h4>Document Info</h4>
+            <p>{% if document.issue_date %}<strong>Date:</strong> {{ document.issue_date }}<br>{% endif %}
+            <strong>From:</strong> {{ document.vendor.name }}<br>
+            <strong>Email:</strong> {{ document.vendor.email }}
+            {% if document.vendor.registration_number %}<br><strong>IBR#:</strong> {{ document.vendor.registration_number }}{% endif %}
+            {% if document.lot_number %}<br><strong class="accent-text">Lot No:</strong> {{ document.lot_number }}{% endif %}
+            </p>
+        </div>
+    </div>
+
+    <table class="creative-table">
+        <thead><tr><th style="text-align:left;">Description</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Rate</th><th style="text-align:right;">Total</th></tr></thead>
+        <tbody>
+            {% for item in document.line_items %}
+            <tr>
+                <td><strong>{{ item.description }}</strong>{% if item.specifications %}<br><span class="muted">{{ item.specifications }}</span>{% endif %}</td>
+                <td style="text-align:center;">{{ item.quantity }}</td>
+                <td style="text-align:right;">M {{ item.unit_price | money }}</td>
+                <td style="text-align:right;font-weight:bold;">M {{ item.total | money }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="creative-total">
+        <span>Total Amount Due</span>
+        <h2>M {{ document.total_amount | money }}</h2>
+    </div>
+
+    {% if document.notes %}
+    <div class="creative-notes">
+        <h4>Terms &amp; Notes</h4>
+        <div class="styled-notes">{{ document.notes }}</div>
+    </div>
+    {% endif %}
+</div>

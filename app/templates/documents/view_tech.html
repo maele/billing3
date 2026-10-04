@@ -1,0 +1,55 @@
+<div class="tech-doc">
+    <div class="header-box">
+        <div>
+            {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Logo" style="max-height:60px;filter:brightness(0) invert(1);">
+            {% else %}<h2 style="margin:0;font-size:1.5rem;">{{ document.vendor.name }}</h2>{% endif %}
+            <div style="margin-top:1rem;font-size:0.85rem;color:#9ca3af;" class="mono">
+                {{ document.vendor.email }} | {{ document.vendor.phone }}
+                {% if document.vendor.registration_number %}<br>IBR: {{ document.vendor.registration_number }}{% endif %}
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <h1 style="margin:0;font-size:2rem;color:#3b82f6;">{{ document.doc_type.upper() }}</h1>
+            <div class="mono" style="margin-top:0.5rem;font-size:1rem;">
+                DOC_ID: {{ document.document_number }}
+                {% if document.issue_date %}<br>TS: {{ document.issue_date }}{% endif %}
+                {% if document.lot_number %}<br>LOT: {{ document.lot_number }}{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div style="background:#f3f4f6;padding:1.5rem;border-radius:6px;">
+            <p style="font-size:0.75rem;text-transform:uppercase;color:#6b7280;margin:0 0 0.5rem 0;font-weight:bold;">[ DESTINATION_CLIENT ]</p>
+            <h3 style="margin:0 0 0.5rem 0;">{{ document.client.name }}</h3>
+            <p style="margin:0;font-size:0.9rem;color:#4b5563;">{% if document.client.contact_person %}USER: {{ document.client.contact_person }}<br>{% endif %}LOC: {{ document.client.address }}</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>Payload (Description)</th><th style="text-align:center;">Multiplier</th><th style="text-align:right;">Unit_Val</th><th style="text-align:right;">Computed_Total</th></tr>
+        </thead>
+        <tbody>
+            {% for item in document.line_items %}
+            <tr>
+                <td><strong>{{ item.description }}</strong>{% if item.specifications %}<br><span style="font-size:0.85em;color:#6b7280;">{{ item.specifications }}</span>{% endif %}</td>
+                <td style="text-align:center;" class="mono">{{ item.quantity }}</td>
+                <td style="text-align:right;" class="mono">M {{ item.unit_price | money }}</td>
+                <td style="text-align:right;font-weight:bold;" class="mono">M {{ item.total | money }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" style="text-align:right;padding-top:1.5rem;font-size:1.1rem;"><strong>OUTPUT_SUM:</strong></td>
+                <td style="text-align:right;padding-top:1.5rem;font-size:1.3rem;color:#3b82f6;" class="mono"><strong>M {{ document.total_amount | money }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if document.notes %}
+    <div style="border-top:1px dashed #d1d5db;padding-top:1.5rem;margin-top:3rem;">
+        <p style="font-size:0.75rem;text-transform:uppercase;color:#6b7280;margin:0 0 0.5rem 0;font-weight:bold;">/* EOF_NOTES */</p>
+        <div class="mono" style="font-size:0.8rem;color:#4b5563;white-space:pre-wrap;">{{ document.notes }}</div>
+    </div>
+    {% endif %}
+</div>

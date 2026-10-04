@@ -1,0 +1,52 @@
+<div class="corp-doc">
+    <table class="header-table">
+        <tr>
+            <td style="width:50%;">
+                {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Logo" style="max-height:80px;display:block;">
+                {% else %}<h1 style="margin:0;font-size:2rem;text-transform:uppercase;">{{ document.vendor.name }}</h1>{% endif %}
+            </td>
+            <td style="text-align:right;vertical-align:bottom;">
+                <h1 style="margin:0;font-size:2rem;">{{ document.doc_type.upper() }}</h1>
+                <p><strong>No:</strong> {{ document.document_number }}{% if document.issue_date %} | <strong>Date:</strong> {{ document.issue_date }}{% endif %}</p>
+                {% if document.lot_number %}<p><strong>Lot Reference:</strong> {{ document.lot_number }}</p>{% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <h4>VENDOR DETAILS:</h4>
+            <p><strong>{{ document.vendor.name }}</strong><br>{{ document.vendor.address }}<br>Tel: {{ document.vendor.phone }}<br>Email: {{ document.vendor.email }}<br>
+            {% if document.vendor.registration_number %}IBR#: {{ document.vendor.registration_number }}{% endif %}</p>
+        </div>
+        <div class="info-box">
+            <h4>CLIENT DETAILS:</h4>
+            <p><strong>{{ document.client.name }}</strong><br>{% if document.client.contact_person %}Attn: {{ document.client.contact_person }}<br>{% endif %}{{ document.client.address }}<br>Tel: {{ document.client.phone }}<br>Email: {{ document.client.email }}</p>
+        </div>
+    </div>
+
+    <table class="data">
+        <thead><tr><th style="width:50%;text-align:left;">DESCRIPTION</th><th>QTY</th><th>PRICE (M)</th><th>TOTAL (M)</th></tr></thead>
+        <tbody>
+            {% for item in document.line_items %}
+            <tr>
+                <td><strong>{{ item.description }}</strong>{% if item.specifications %}<br><span style="font-size:0.9em;">{{ item.specifications }}</span>{% endif %}</td>
+                <td style="text-align:center;">{{ item.quantity }}</td>
+                <td style="text-align:right;">{{ item.unit_price | money }}</td>
+                <td style="text-align:right;">{{ item.total | money }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" style="text-align:right;font-weight:bold;">GRAND TOTAL:</td>
+                <td style="text-align:right;font-weight:bold;background:#eee;">M {{ document.total_amount | money }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if document.notes %}
+    <div class="corp-notes">
+        <h4>AUTHORIZED NOTES &amp; TERMS:</h4>
+        <div class="styled-notes">{{ document.notes }}</div>
+    </div>
+    {% endif %}
+</div>

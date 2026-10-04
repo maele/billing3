@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Billing System 3.0{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+</head>
+<body class="h-full bg-stone-50 text-stone-700">
+
+<header class="sticky top-0 z-40 bg-stone-50/85 backdrop-blur border-b border-stone-200/80">
+  <div class="max-w-6xl mx-auto px-5 h-13 flex items-center gap-5">
+    <a href="#/" class="flex items-center gap-2 text-stone-900">
+      <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+      <span class="text-[13px] font-semibold tracking-[-0.01em]">Billing</span>
+      <span class="text-[13px] text-stone-400 font-normal">3.0</span>
+    </a>
+    <nav class="hidden sm:flex items-center gap-0.5 text-[13px]">
+      <a href="#/"        class="px-2.5 py-1.5 rounded-md text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors">Dashboard</a>
+      <a href="#/clients" class="px-2.5 py-1.5 rounded-md text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors">Clients</a>
+      <a href="#/vendors" class="px-2.5 py-1.5 rounded-md text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors">Vendors</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-1">
+      <button type="button" id="btn-export" class="btn-ghost btn-sm">Export</button>
+      <button type="button" id="btn-import" class="btn-ghost btn-sm">Import</button>
+      <button type="button" id="btn-reset"  class="btn-ghost btn-sm">Reset</button>
+      <span class="hidden sm:block w-px h-4 bg-stone-200 mx-1.5"></span>
+    </div>
+    <input type="file" id="file-import" accept="application/json" hidden>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-5 py-8 pb-24">
+  <div id="toast-stack" class="fixed top-[3.75rem] right-4 z-50 space-y-2 pointer-events-none"></div>
+  <div id="app">
+    <p class="text-stone-400 text-sm">Loading&hellip;</p>
+  </div>
+</main>
+
+<div id="modal-root"></div>
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
+</body>
+</html>

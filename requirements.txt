@@ -1,0 +1,5 @@
+Flask>=3.0,<4
+python-dotenv>=1.0
+WeasyPrint>=61.0
+pytest>=8.0
+pytailwindcss>=0.2

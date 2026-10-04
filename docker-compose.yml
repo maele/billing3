@@ -1,0 +1,111 @@
+services:
+  app:
+    build: .
+    image: billing3:latest
+    container_name: billing3
+    restart: unless-stopped
+
+    # No host port: only the cloudflared container can reach it via the
+    # shared network. Add a temporary -p mapping when debugging locally.
+    expose:
+      - "5224"
+
+    environment:
+      FLASK_CONFIG: prod
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
+      # WeasyPrint and Jinja do not need this, but a paranoid default:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+
+    read_only: true
+    tmpfs:
+      - /tmp:size=64M,mode=1777
+
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:true
+
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: "1.5"
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5224/').status==200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - billing
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: billing3-tunnel
+    restart: unless-stopped
+
+    # --protocol http2 is more reliable than QUIC on home/small-office
+    # networks where UDP buffer tuning is limited. If you want QUIC back
+    # after tuning rmem_max on the host, drop the flag.
+    command: tunnel --no-autoupdate --protocol http2 --metrics 0.0.0.0:60123 run
+
+    environment:
+      # Never hardcode the token. Rotate it if this file was ever shared.
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN in .env}
+
+    depends_on:
+      app:
+        condition: service_healthy
+
+    # Container-internal only; nothing external talks to this.
+    expose:
+      - "60123"
+
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:true
+
+    # No read_only here: cloudflared writes cert.pem and metrics state.
+    # If you want full read-only, mount a tmpfs for /home/nonroot/.cloudflared.
+
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+
+    healthcheck:
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "127.0.0.1:60123", "ready"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - billing
+
+networks:
+  billing:
+    driver: bridge

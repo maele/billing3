@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings: "cv02","cv03","cv04","cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body { @apply antialiased; }
+  ::selection { @apply bg-indigo-100 text-indigo-900; }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md
+           px-3 py-1.5 text-[13px] font-medium leading-none
+           transition-[background-color,border-color,color,box-shadow] duration-150
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+           focus-visible:ring-indigo-500/40
+           disabled:opacity-40 disabled:pointer-events-none select-none;
+  }
+  .btn-primary {
+    @apply btn bg-stone-900 text-white hover:bg-stone-800 active:bg-stone-950;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900
+           active:bg-stone-200;
+  }
+  .btn-outline {
+    @apply btn bg-white text-stone-700 border border-stone-200
+           hover:bg-stone-50 hover:border-stone-300 active:bg-stone-100;
+  }
+  .btn-danger {
+    @apply btn bg-transparent text-stone-400 hover:bg-red-50 hover:text-red-600;
+  }
+  .btn-sm { @apply px-2.5 py-1 text-[12px]; }
+  .btn-icon { @apply !p-1.5; }
+
+  /* Form */
+  .input {
+    @apply block w-full rounded-md border border-stone-200 bg-white
+           px-3 py-2 text-[13.5px] text-stone-900 placeholder:text-stone-400
+           transition-shadow
+           focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10;
+  }
+  .label {
+    @apply block text-[11px] font-medium uppercase tracking-[0.08em]
+           text-stone-500 mb-1.5;
+  }
+  .input-readonly { @apply bg-stone-50 text-stone-500 font-mono; }
+
+  /* Surfaces */
+  .panel {
+    @apply bg-white rounded-lg border border-stone-200/80
+           shadow-[0_1px_2px_rgba(15,23,42,0.03)];
+  }
+  .eyebrow {
+    @apply text-[10.5px] font-semibold uppercase tracking-[0.14em] text-stone-500;
+  }
+  .hairline { @apply border-t border-stone-200/80; }
+
+  /* Numbers */
+  .num {
+    @apply font-mono text-[12.5px] tabular-nums tracking-[-0.01em];
+  }
+
+  /* Row */
+  .row {
+    @apply relative transition-colors;
+  }
+  .row::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-[3px] bg-transparent transition-colors;
+  }
+  .row:hover { @apply bg-stone-50/60; }
+  .row:hover::before { @apply bg-indigo-500; }
+  .row-quote::before { @apply bg-amber-400/70; }
+  .row-invoice::before { @apply bg-indigo-500/70; }
+
+  /* Row actions — hidden until hover on desktop, always shown on touch */
+  .row-actions {
+    @apply flex items-center justify-end gap-1
+           opacity-0 transition-opacity duration-150;
+  }
+  .row:hover .row-actions { @apply opacity-100; }
+  .row-actions { opacity: 1; }  /* always visible — remove this line to enable hover-reveal */
+  @media (hover: hover) and (min-width: 900px) {
+    .row-actions { opacity: 0; }
+    .row:hover .row-actions,
+    .row:focus-within .row-actions { opacity: 1; }
+  }
+}

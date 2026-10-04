@@ -1,0 +1,65 @@
+<div class="doc-title-center"><h1>{{ document.doc_type.upper() }}</h1></div>
+
+<div class="doc-header-top">
+    <div>
+        {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Vendor Logo" style="max-height:80px;margin-bottom:1rem;">{% endif %}
+        <h2>{{ document.vendor.name }}</h2>
+        {% if document.vendor.registration_number %}<p class="muted"><strong>IBR#:</strong> {{ document.vendor.registration_number }}</p>{% endif %}
+    </div>
+    <div style="text-align:right;">
+        <p><strong>{{ document.doc_type }} number:</strong> {{ document.document_number }}</p>
+        {% if document.issue_date %}<p class="muted"><strong>Date:</strong> {{ document.issue_date }}</p>{% endif %}
+        {% if document.due_date %}<p class="muted"><strong>Due:</strong> {{ document.due_date }}</p>{% endif %}
+        {% if document.lot_number %}<p><strong>Lot No:</strong> {{ document.lot_number }}</p>{% endif %}
+    </div>
+</div>
+
+<div class="document-grid">
+    <div class="document-info-box">
+        <h3>From</h3>
+        <p><strong>{{ document.vendor.name }}</strong></p>
+        <p style="white-space:pre-wrap;">{{ document.vendor.address }}</p>
+        <p>{{ document.vendor.phone }}</p>
+        <p>{{ document.vendor.email }}</p>
+    </div>
+    <div class="document-info-box">
+        <h3>Bill To</h3>
+        <p><strong>{{ document.client.name }}</strong></p>
+        {% if document.client.contact_person %}<p>Attn: {{ document.client.contact_person }}</p>{% endif %}
+        <p style="white-space:pre-wrap;">{{ document.client.address }}</p>
+        <p>{{ document.client.phone }}</p>
+        <p>{{ document.client.email }}</p>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th style="text-align:center;width:10%;">Qty</th>
+            <th style="text-align:right;width:20%;">Unit Price</th>
+            <th style="text-align:right;width:20%;">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in document.line_items %}
+        <tr>
+            <td><strong>{{ item.description }}</strong>{% if item.specifications %}<div class="item-specs">{{ item.specifications }}</div>{% endif %}</td>
+            <td style="text-align:center;">{{ item.quantity }}</td>
+            <td style="text-align:right;">M {{ item.unit_price | money }}</td>
+            <td style="text-align:right;">M {{ item.total | money }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+            <td colspan="3" style="text-align:right;"><strong>Grand Total</strong></td>
+            <td style="text-align:right;"><strong>M {{ document.total_amount | money }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+{% if document.notes %}
+<div class="notes-block">
+    <h4>Notes &amp; Terms</h4>
+    <div class="styled-notes">{{ document.notes }}</div>
+</div>
+{% endif %}

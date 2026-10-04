@@ -1,0 +1,48 @@
+<div class="eco-doc">
+    <div style="text-align:center;margin-bottom:3rem;">
+        {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Logo" style="max-height:90px;border-radius:50%;">
+        {% else %}<h2 style="font-size:2.2rem;margin:0;">{{ document.vendor.name }}</h2>{% endif %}
+        <div class="divider"></div>
+        <p style="margin:0;font-size:0.9rem;">{{ document.vendor.address }} | {{ document.vendor.email }} | {{ document.vendor.phone }}</p>
+        {% if document.vendor.registration_number %}<p style="margin:0;font-size:0.8rem;color:#6b705c;">IBR#: {{ document.vendor.registration_number }}</p>{% endif %}
+    </div>
+
+    <div style="display:flex;justify-content:space-between;background:#fff;padding:2rem;border-radius:12px;border:1px solid #ede8d0;">
+        <div>
+            <p style="color:#8f9779;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;margin-top:0;">Billed To</p>
+            <h3 style="margin:0 0 0.5rem 0;color:#2d3a12;">{{ document.client.name }}</h3>
+            <p style="margin:0;font-size:0.9rem;">{% if document.client.contact_person %}{{ document.client.contact_person }}<br>{% endif %}{{ document.client.address }}</p>
+        </div>
+        <div style="text-align:right;">
+            <h1 style="margin:0 0 0.5rem 0;font-size:1.8rem;">{{ document.doc_type }}</h1>
+            <p style="margin:0;font-size:1rem;"><strong>No:</strong> {{ document.document_number }}</p>
+            {% if document.issue_date %}<p style="margin:0;font-size:0.9rem;"><strong>Date:</strong> {{ document.issue_date }}</p>{% endif %}
+            {% if document.lot_number %}<p style="margin:0;font-size:0.9rem;"><strong>Lot:</strong> {{ document.lot_number }}</p>{% endif %}
+        </div>
+    </div>
+
+    <table>
+        <thead><tr><th>Item / Service</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Price</th><th style="text-align:right;">Total</th></tr></thead>
+        <tbody>
+            {% for item in document.line_items %}
+            <tr>
+                <td><strong>{{ item.description }}</strong>{% if item.specifications %}<br><span style="font-size:0.85em;color:#8f9779;">{{ item.specifications }}</span>{% endif %}</td>
+                <td style="text-align:center;">{{ item.quantity }}</td>
+                <td style="text-align:right;">M {{ item.unit_price | money }}</td>
+                <td style="text-align:right;font-weight:bold;color:#2d3a12;">M {{ item.total | money }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" style="text-align:right;padding-top:2rem;font-size:1.1rem;background:transparent;border:none;">Total Amount:</td>
+                <td style="text-align:right;padding-top:2rem;font-size:1.3rem;font-weight:bold;color:#2d3a12;background:transparent;border:none;">M {{ document.total_amount | money }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if document.notes %}
+    <div style="margin-top:3rem;text-align:center;">
+        <p style="color:#8f9779;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">Notes</p>
+        <p style="font-size:0.9rem;max-width:80%;margin:0 auto;white-space:pre-wrap;font-style:italic;">{{ document.notes }}</p>
+    </div>
+    {% endif %}
+</div>

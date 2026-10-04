@@ -1,0 +1,756 @@
+/* ─────────────────────────────────────────────────────────────
+   Billing 3.0 document styles.
+   Rendered by WeasyPrint (PDF) and the browser (preview iframe).
+   Kept deliberately conservative: no flex-gap, no grid-gap, no :has()
+   in critical paths, because WeasyPrint 61 does not fully support them.
+   ───────────────────────────────────────────────────────────── */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
+:root {
+  --ink:        #0b1220;
+  --ink-soft:   #334155;
+  --muted:      #64748b;
+  --muted-2:    #94a3b8;
+  --hairline:   #e5e7eb;
+  --hairline-2: #f1f5f9;
+  --surface:    #f8fafc;
+  --paper:      #ffffff;
+  --accent:     #1d4ed8;
+  --accent-ink: #ffffff;
+  --danger:     #b91c1c;
+  --num:        ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans:       system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif:      Georgia, "Times New Roman", serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body.document-body {
+  margin: 0;
+  padding: 36px 40px;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body.document-body h1,
+body.document-body h2,
+body.document-body h3,
+body.document-body h4 {
+  color: var(--ink);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* Numbers: always tabular, always right-aligned */
+body.document-body .num {
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Shared primitives ──────────────────────────────────────── */
+.muted        { color: var(--muted); }
+.item-specs   { margin-top: 4px; font-size: 12px; color: var(--muted); white-space: pre-wrap; }
+.styled-notes {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  text-align: left;
+  max-width: 78ch;
+}
+
+body.document-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 13.5px;
+}
+body.document-body thead th {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  text-align: left;
+}
+body.document-body tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+body.document-body tbody tr:last-child td { border-bottom: 0; }
+body.document-body .total-row td {
+  padding-top: 18px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 0;
+  font-size: 14px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STANDARD — quiet, typographic, one accent.
+   ───────────────────────────────────────────────────────────── */
+.doc-title-center {
+  text-align: left;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ink);
+}
+.doc-title-center h1 {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ink);
+}
+.doc-title-center h1::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 26px;
+  background: var(--accent);
+  margin-right: 14px;
+  vertical-align: -3px;
+}
+
+.doc-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--hairline);
+}
+.doc-header-top h2 { font-size: 18px; margin-bottom: 2px; }
+.doc-header-top p  { margin: 4px 0; font-size: 13px; }
+.doc-header-top > div:last-child p { font-size: 12.5px; }
+.doc-header-top > div:last-child strong { color: var(--ink); font-weight: 600; }
+
+.document-grid {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 36px;
+}
+.document-info-box {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--ink);
+  padding: 14px 0 0 0;
+  border-radius: 0;
+}
+.document-info-box h3 {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.document-info-box p { margin: 3px 0; font-size: 13px; }
+.document-info-box p:first-of-type { font-size: 14px; color: var(--ink); }
+
+.notes-block {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+.notes-block h4 {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MODERN — dark, sharp, tight tracking.
+   ───────────────────────────────────────────────────────────── */
+.modern-header {
+  background: #0b1220;
+  color: #e2e8f0;
+  padding: 28px 32px;
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 32px;
+  border: 0;
+}
+.modern-header h1 {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  margin: 0;
+}
+.modern-header p {
+  margin: 8px 0 0;
+  color: #94a3b8;
+  font-size: 13px;
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+}
+.modern-header .lot { color: #7dd3fc; }
+.modern-header img { background: #fff; padding: 6px; border-radius: 3px; }
+
+.modern-subhead {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.modern-subhead,
+.modern-subhead::after { border-color: var(--hairline); }
+.modern-subhead::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 12px;
+  background: var(--accent);
+  margin-right: 10px;
+  vertical-align: -1px;
+}
+.modern-notes {
+  margin-top: 32px;
+  background: var(--surface);
+  padding: 20px 22px;
+  border-left: 3px solid var(--accent);
+}
+.modern-notes h4 {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MINIMALIST — pure type, serif headers, hairlines only.
+   ───────────────────────────────────────────────────────────── */
+.minimal-doc {
+  font-family: var(--serif);
+  color: #1f2937;
+  max-width: 100%;
+}
+.minimal-doc h1,
+.minimal-doc h2,
+.minimal-doc h3 {
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #111827;
+}
+.minimal-doc .minimal-brand {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #374151;
+  margin: 0;
+}
+.minimal-doc h1 {
+  font-size: 30px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  margin: 16px 0 6px;
+}
+.minimal-doc table {
+  border-top: 1px solid #111827;
+  border-bottom: 1px solid #111827;
+  margin-top: 40px;
+}
+.minimal-doc thead th {
+  border-bottom: 0;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+}
+.minimal-doc tbody td {
+  border: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.minimal-doc tbody tr:last-child td { border-bottom: 0; }
+.minimal-doc .total-row td {
+  border-top: 1px solid #111827;
+  border-bottom: 0;
+  padding-top: 18px;
+  font-size: 14px;
+}
+.minimal-parties {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin: 32px 0 0;
+}
+.minimal-parties > div { flex: 1; width: auto; }
+.minimal-parties p { margin: 4px 0; font-size: 13px; }
+.minimal-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin-bottom: 8px;
+}
+.minimal-notes { margin-top: 48px; text-align: left; }
+.minimal-notes .styled-notes {
+  font-style: italic;
+  max-width: 60ch;
+  color: #4b5563;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CREATIVE — warm terracotta, cream paper, no gradient clichés.
+   ───────────────────────────────────────────────────────────── */
+.creative-doc {
+  background: #fffbf5;
+  padding: 40px 44px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
+  border: 1px solid #f5e6d3;
+}
+.creative-doc::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: #c2410c;
+}
+.creative-doc .accent-text {
+  color: #9a3412;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.creative-doc img { border-radius: 3px; object-fit: contain; }
+.creative-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+.creative-header h1 {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #1c1917;
+  line-height: 1;
+  margin: 0;
+  text-transform: none;
+}
+.creative-header p {
+  color: #78716c;
+  font-size: 13px;
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  margin-top: 8px;
+}
+.creative-parties {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px dashed #e7d8c2;
+}
+.creative-parties > div { flex: 1; }
+.creative-parties h4 {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a8a29e;
+  margin-bottom: 10px;
+}
+.creative-parties p { margin: 4px 0; font-size: 13px; color: #44403c; }
+.creative-table { background: transparent; }
+.creative-table thead th {
+  border-bottom: 1px solid #d6d3d1;
+  background: transparent;
+  color: #78716c;
+  padding: 10px 0;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+}
+.creative-table tbody td {
+  border-bottom: 1px dashed #e7e5e4;
+  padding: 16px 0;
+}
+.creative-total {
+  background: #1c1917;
+  color: #fff;
+  padding: 22px 26px;
+  border-radius: 4px;
+  text-align: right;
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.creative-total span {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d6d3d1;
+  opacity: 1;
+}
+.creative-total h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.creative-notes { margin-top: 28px; }
+.creative-notes h4 {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a8a29e;
+  margin-bottom: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CORPORATE — traditional, navy accent, serif body.
+   ───────────────────────────────────────────────────────────── */
+.corp-doc {
+  font-family: var(--serif);
+  color: #111827;
+  font-size: 13.5px;
+}
+.corp-doc h1, .corp-doc h2, .corp-doc h3, .corp-doc h4 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.corp-doc .header-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-bottom: 2px solid #1e3a8a;
+  padding-bottom: 0;
+  margin-bottom: 24px;
+}
+.corp-doc .header-table td {
+  padding: 0 0 16px 0;
+  border: 0;
+  vertical-align: bottom;
+  background: transparent;
+}
+.corp-doc .header-table h1 { font-size: 26px; letter-spacing: -0.01em; color: #1e3a8a; }
+.corp-doc .header-table p { margin: 4px 0 0; font-size: 12.5px; color: #374151; }
+.corp-doc .info-grid {
+  display: flex;
+  gap: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.corp-doc .info-box {
+  padding: 16px 20px;
+  width: 50%;
+  background: #f8fafc;
+}
+.corp-doc .info-box:first-child { border-right: 1px solid #cbd5e1; }
+.corp-doc .info-box h4 {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+.corp-doc .info-box p { margin: 3px 0; font-size: 12.5px; }
+.corp-doc table.data {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+.corp-doc table.data thead th {
+  background: #1e3a8a;
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  border: 1px solid #1e3a8a;
+  text-align: left;
+}
+.corp-doc table.data tbody td {
+  border: 1px solid #e2e8f0;
+  padding: 10px 12px;
+}
+.corp-doc table.data tbody tr:nth-child(even) { background: #f8fafc; }
+.corp-doc table.data tbody tr:last-child td {
+  border-top: 2px solid #1e3a8a;
+  background: #fff;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+.corp-notes {
+  border: 0;
+  border-top: 1px solid #cbd5e1;
+  padding: 16px 0 0;
+  margin-top: 24px;
+}
+.corp-notes h4 {
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #1e3a8a;
+  margin-bottom: 8px;
+}
+.corp-notes .styled-notes { font-size: 12px; color: #4b5563; font-family: var(--sans); }
+
+/* ─────────────────────────────────────────────────────────────
+   ECO — forest + sand, serif headers, quiet table.
+   ───────────────────────────────────────────────────────────── */
+.eco-doc {
+  font-family: var(--serif);
+  color: #3f4a2a;
+  background: #f7f4ec;
+  padding: 40px 44px;
+  border-radius: 6px;
+  font-size: 13.5px;
+}
+.eco-doc h1, .eco-doc h2 {
+  font-family: var(--serif);
+  color: #1f2a12;
+  letter-spacing: -0.005em;
+}
+.eco-doc .divider {
+  height: 1px;
+  background: #b8b68f;
+  width: 40px;
+  margin: 16px auto;
+}
+.eco-doc table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin-top: 32px;
+  background: transparent;
+}
+.eco-doc thead th {
+  border-bottom: 1px solid #b8b68f;
+  padding: 0 0 10px;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #6b7458;
+}
+.eco-doc tbody td {
+  background: transparent;
+  padding: 14px 0;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid #e2ddc9;
+}
+.eco-doc tbody tr:last-child td {
+  border-bottom: 0;
+  border-top: 1px solid #b8b68f;
+  padding-top: 18px;
+  font-size: 14px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TECH — dark, mono figures, one electric accent.
+   ───────────────────────────────────────────────────────────── */
+.tech-doc {
+  font-family: var(--sans);
+  color: #0f172a;
+  font-size: 13.5px;
+}
+.tech-doc .mono {
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.tech-doc .header-box {
+  background: #0b1220;
+  color: #e2e8f0;
+  padding: 26px 30px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 28px;
+  border-left: 3px solid #3b82f6;
+}
+.tech-doc .header-box h1 {
+  color: #60a5fa;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+.tech-doc .header-box h2 { color: #ffffff; font-size: 20px; }
+.tech-doc .header-box .mono { font-size: 12px; color: #94a3b8; }
+.tech-doc .grid {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.tech-doc .grid > div {
+  flex: 1;
+  background: #f1f5f9;
+  padding: 18px 20px;
+  border-radius: 4px;
+  border-left: 3px solid #3b82f6;
+}
+.tech-doc .grid p:first-child {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 0 0 8px 0;
+}
+.tech-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+.tech-doc thead th {
+  border-bottom: 1px solid #0f172a;
+  background: transparent;
+  padding: 10px 12px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #475569;
+}
+.tech-doc tbody td {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 14px 12px;
+  font-size: 13px;
+}
+.tech-doc tbody tr:last-child td {
+  border-top: 1px solid #0f172a;
+  border-bottom: 0;
+  padding-top: 18px;
+  font-size: 14px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Print overrides — strip rounded corners and shadows.
+   ───────────────────────────────────────────────────────────── */
+@media print {
+  body.document-body { padding: 0; font-size: 11pt; }
+  .modern-header, .tech-doc .header-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .creative-doc, .eco-doc, .corp-doc .info-grid { box-shadow: none; }
+  .creative-doc { background: transparent; border: 0; padding: 0; }
+  .creative-doc::before { display: none; }
+  .eco-doc { background: transparent; padding: 0; }
+  .modern-notes { background: #f5f5f5; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile & narrow preview — everything stacks, tables compress.
+   The preview iframe on a phone is ~340px; in the split-pane
+   editor it is often 400–600px.
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  body.document-body { padding: 20px 18px; font-size: 13px; }
+
+  .doc-title-center { margin-bottom: 20px; padding-bottom: 14px; }
+  .doc-title-center h1 { font-size: 22px; }
+  .doc-title-center h1::before { width: 4px; height: 18px; margin-right: 10px; }
+
+  .doc-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+  .doc-header-top > div:last-child { text-align: left !important; }
+
+  .document-grid { flex-direction: column; gap: 20px; margin-bottom: 24px; }
+  .document-info-box { padding-top: 12px; }
+  .document-info-box:first-child { padding-top: 12px; }
+
+  .modern-header { padding: 18px 18px; gap: 16px; flex-direction: column; align-items: flex-start; }
+  .modern-header h1 { font-size: 22px; }
+  .modern-header > div:last-child { text-align: left !important; }
+
+  .minimal-parties { flex-direction: column; gap: 20px; }
+  .minimal-parties > div { width: 100%; }
+  .minimal-doc h1 { font-size: 22px; }
+
+  .creative-doc { padding: 24px 20px; }
+  .creative-header { flex-direction: column; gap: 14px; margin-bottom: 24px; }
+  .creative-header h1 { font-size: 28px; }
+  .creative-header > div:last-child { text-align: left !important; }
+  .creative-parties { flex-direction: column; gap: 20px; padding-bottom: 20px; }
+  .creative-total { flex-direction: column; align-items: flex-end; gap: 4px; padding: 16px 18px; }
+  .creative-total h2 { font-size: 22px; }
+
+  .corp-doc .info-grid { flex-direction: column; }
+  .corp-doc .info-box { width: 100%; }
+  .corp-doc .info-box:first-child { border-right: 0; border-bottom: 1px solid #cbd5e1; }
+
+  .eco-doc { padding: 24px 20px; }
+
+  .tech-doc .header-box { padding: 18px 18px; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .tech-doc .header-box h1 { font-size: 20px; }
+  .tech-doc .header-box > div:last-child { text-align: left !important; }
+  .tech-doc .grid { flex-direction: column; gap: 14px; }
+
+  /* Tables: compress padding and shrink header labels */
+  body.document-body table { font-size: 12px; }
+  body.document-body thead th { padding: 8px 6px; font-size: 9.5px; letter-spacing: 0.06em; }
+  body.document-body tbody td { padding: 10px 6px; }
+  body.document-body .total-row td { padding-top: 14px; font-size: 13px; }
+
+  .item-specs { font-size: 11px; }
+  .styled-notes { font-size: 11.5px; }
+}
+
+/* Very narrow phones — drop to 12px body, tighter tables. */
+@media (max-width: 420px) {
+  body.document-body { padding: 16px 14px; font-size: 12.5px; }
+  body.document-body thead th { padding: 6px 4px; font-size: 9px; }
+  body.document-body tbody td { padding: 9px 4px; }
+  .doc-title-center h1 { font-size: 20px; }
+  .modern-header h1, .minimal-doc h1, .creative-header h1 { font-size: 20px; }
+  .tech-doc .header-box h1 { font-size: 18px; }
+}

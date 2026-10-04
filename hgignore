@@ -1,0 +1,16 @@
+# .hgignore
+syntax: glob
+
+# Python
+*.pyc
+__pycache__/
+venv/
+.env
+
+# JavaScript
+node_modules/
+dist/
+
+# OS / IDE
+.vscode/
+.DS_Store
